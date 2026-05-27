@@ -13,7 +13,9 @@
     "supabase:stop": "supabase stop",
     "supabase:status": "supabase status",
     "supabase:reset": "supabase db reset --local",
-    "supabase:list": "supabase migration list --local"
+    "supabase:list": "supabase migration list --local",
+    "import:gyms": "tsx scripts/import-gyms.ts",
+    "import:gyms:dry": "tsx scripts/import-gyms.ts --dry-run"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
@@ -28,6 +30,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "supabase": "^1.219.2",
+    "tsx": "^4.22.3",
     "typescript": "^5.6.3",
     "vitest": "^2.1.5"
   }
