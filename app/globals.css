@@ -25,3 +25,23 @@ a:hover { text-decoration: underline; }
 .muted { color: var(--text-secondary); font-size: 0.875rem; }
 .divider { display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0; color: var(--text-secondary); font-size: 0.875rem; }
 .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.card {
+  display: block;
+  padding: 1.25rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+.card:hover, .card:focus-visible {
+  border-color: rgba(125, 249, 255, 0.4);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+.card h3 { margin: 0 0 0.5rem 0; font-size: 1.125rem; }
+.card p { margin: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+  .card:hover, .card:focus-visible { transform: none; }
+}

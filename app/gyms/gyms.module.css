@@ -1,0 +1,265 @@
+/* gyms 도메인 전용 스타일 — 정보 중심, 깔끔한 다크 톤
+   디시 톤과 분리. 색상 의존 X (모든 상태는 글자도 함께). */
+
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  line-height: 1.6;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+.crumb {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.75rem;
+}
+.crumb a {
+  color: var(--text-secondary);
+}
+
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.75rem 0 1.25rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.filterLabel {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-right: 0.25rem;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  text-decoration: none;
+  line-height: 1.4;
+}
+.chip:hover {
+  text-decoration: none;
+  border-color: var(--accent-cyan);
+}
+.chipActive {
+  border-color: var(--accent-cyan);
+  background: rgba(24, 215, 255, 0.08);
+  color: var(--accent-cyan);
+}
+.chipRemove {
+  min-width: 24px;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.125rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 150ms ease-out, transform 150ms ease-out;
+}
+.card:hover {
+  text-decoration: none;
+  border-color: var(--accent-cyan);
+  transform: translateY(-2px);
+}
+.card:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+.cardGymName {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+.cardBranchName {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-primary);
+}
+.cardRegion {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+.cardChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-top: 0.25rem;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.badgeActive {
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+}
+
+.empty {
+  padding: 3rem 1rem;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+.emptyTitle {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem;
+}
+
+.pager {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+.pagerLink {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+}
+.pagerLink:hover {
+  border-color: var(--accent-cyan);
+  text-decoration: none;
+}
+.pagerDisabled {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+/* 상세 페이지 */
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+@media (max-width: 768px) {
+  .detailGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.005em;
+}
+.kv {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.5rem 1rem;
+  font-size: 0.9375rem;
+}
+.kvLabel {
+  color: var(--text-secondary);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.5rem 0.625rem;
+  border-bottom: 1px solid var(--border);
+}
+.table th {
+  color: var(--text-secondary);
+  font-weight: 500;
+  width: 6rem;
+}
+.table tr:last-child td,
+.table tr:last-child th {
+  border-bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .card:hover {
+    transform: none;
+    transition: none;
+  }
+}

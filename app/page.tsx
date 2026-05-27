@@ -10,6 +10,18 @@ export default async function HomePage() {
       <h1>ClimbForum</h1>
       <p className="muted">대한민국 실내 클라이밍 포털 (Phase 1 — 인증 부트스트랩)</p>
       {/* TODO(codex): hero — 클라이밍 홀드 잡는 손, 16:9, 다크톤 */}
+      <section className="hero-cta" style={{ marginTop: "2rem" }}>
+        <h2>지금 시작하기</h2>
+        <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+          <li>
+            <Link href="/gyms" className="card">
+              <h3>클라이밍장 찾기</h3>
+              <p className="muted">전국 실내 클라이밍장 정보와 지도</p>
+            </Link>
+          </li>
+          {/* 추후 커뮤니티·꿀팁 카드 자리 */}
+        </ul>
+      </section>
       <div style={{ marginTop: "2rem" }}>
         {user ? (
           <>
