@@ -1,0 +1,47 @@
+/* 403 권한 없음 — 단정한 한 페이지 안내 */
+
+.forbidden {
+  max-width: 480px;
+  margin: 4rem auto;
+  padding: 2rem 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-align: left;
+  line-height: 1.6;
+}
+
+.forbidden__title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  color: var(--text-primary);
+  letter-spacing: -0.005em;
+}
+
+.forbidden__message {
+  margin: 0 0 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+.forbidden__home {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--accent-cyan);
+  background: rgba(24, 215, 255, 0.08);
+  border: 1px solid rgba(24, 215, 255, 0.35);
+  border-radius: 6px;
+  text-decoration: none;
+}
+.forbidden__home:hover {
+  background: rgba(24, 215, 255, 0.15);
+  text-decoration: none;
+}
+.forbidden__home:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}

@@ -6,6 +6,7 @@
 // 별도의 `server-only` import 없이도 안전.
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { requireRole } from "@/lib/server/admin-auth";
 import {
   type BranchDetail,
   type GymBranchRow,
@@ -14,9 +15,11 @@ import {
   type GymPricingRow,
   type GymRow,
   type GymWithBranches,
+  type ListAdminGymsInput,
   type ListGymsInput,
   branchSlugSchema,
   gymSlugSchema,
+  listAdminGymsInputSchema,
   listGymsInputSchema,
   sortHoursByDay,
   sortPricing,
@@ -238,5 +241,142 @@ export async function getBranchDetail(
     branch: branchOnly as GymBranchRow,
     hours: sortHoursByDay((hours ?? []) as GymHourRow[]),
     pricing: sortPricing((pricing ?? []) as GymPricingRow[]),
+  };
+}
+
+// ============================================================
+// 4. listGymsForAdmin — admin UI 전용 매장 목록
+// public listGyms 와 다른 점:
+//   - is_active = true 강제하지 않음 (status=all/active/inactive 선택)
+//   - q 키워드 검색 (gym_branches.name_ko ilike)
+//   - 호출 직전 3차 가드 (requireRole) — RLS 우회 시도 방어
+// ============================================================
+export interface AdminGymRow {
+  branch: Pick<
+    GymBranchRow,
+    | "id"
+    | "slug"
+    | "name_ko"
+    | "region_sido"
+    | "region_sgg"
+    | "facility_type"
+    | "is_active"
+    | "closed_at"
+    | "created_at"
+    | "updated_at"
+  >;
+  gym: Pick<GymRow, "id" | "slug" | "name_ko" | "name_en" | "brand_type" | "is_active">;
+}
+
+export interface ListGymsForAdminResult {
+  items: AdminGymRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export async function listGymsForAdmin(
+  input: Partial<ListAdminGymsInput> = {},
+): Promise<ListGymsForAdminResult> {
+  // 3차 가드 — layout/page 가드를 우회한 경로(서버 액션 등)에서도 안전.
+  // 일반 회원이 직접 이 함수를 호출하면 /403 으로 리다이렉트된다.
+  await requireRole(["curator", "admin"]);
+
+  const parsed = listAdminGymsInputSchema.parse({
+    q: input.q,
+    sido: input.sido,
+    facility: input.facility,
+    status: input.status ?? "all",
+    page: input.page ?? 1,
+    pageSize: input.pageSize ?? 20,
+  });
+
+  const supabase = createSupabaseServerClient();
+  const from = (parsed.page - 1) * parsed.pageSize;
+  const to = from + parsed.pageSize - 1;
+
+  let query = supabase
+    .from("gym_branches")
+    .select(
+      `
+        id, slug, name_ko, region_sido, region_sgg, facility_type, is_active, closed_at, created_at, updated_at, gym_id,
+        gym:gyms!inner ( id, slug, name_ko, name_en, brand_type, is_active )
+      `,
+      { count: "exact" },
+    )
+    .order("is_active", { ascending: false })
+    .order("region_sido", { ascending: true })
+    .order("name_ko", { ascending: true })
+    .range(from, to);
+
+  if (parsed.status === "active") query = query.eq("is_active", true);
+  else if (parsed.status === "inactive") query = query.eq("is_active", false);
+  // status === 'all' 인 경우는 필터 없음
+
+  if (parsed.sido) query = query.eq("region_sido", parsed.sido);
+  if (parsed.facility) query = query.eq("facility_type", parsed.facility);
+  if (parsed.q) {
+    // PostgREST ilike 와일드카드 escape — %, _, \ 모두 사용자 입력에서 제거.
+    // 백슬래시도 막는 이유: \% 같은 이스케이프 시퀀스 인젝션·invalid escape 에러 방지.
+    const safe = parsed.q.replace(/[\\%_]/g, " ").trim();
+    if (safe.length > 0) query = query.ilike("name_ko", `%${safe}%`);
+  }
+
+  const { data, error, count } = await query;
+  if (error) {
+    console.error("[gyms] listGymsForAdmin failed", error);
+    throw new Error("매장 목록을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
+  }
+
+  type Row = Pick<
+    GymBranchRow,
+    | "id"
+    | "slug"
+    | "name_ko"
+    | "region_sido"
+    | "region_sgg"
+    | "facility_type"
+    | "is_active"
+    | "closed_at"
+    | "created_at"
+    | "updated_at"
+  > & {
+    gym_id: string;
+    gym:
+      | Pick<GymRow, "id" | "slug" | "name_ko" | "name_en" | "brand_type" | "is_active">
+      | Pick<GymRow, "id" | "slug" | "name_ko" | "name_en" | "brand_type" | "is_active">[];
+  };
+
+  const items: AdminGymRow[] = ((data as Row[] | null) ?? []).map((row) => {
+    const gym = Array.isArray(row.gym) ? row.gym[0] : row.gym;
+    return {
+      branch: {
+        id: row.id,
+        slug: row.slug,
+        name_ko: row.name_ko,
+        region_sido: row.region_sido,
+        region_sgg: row.region_sgg,
+        facility_type: row.facility_type,
+        is_active: row.is_active,
+        closed_at: row.closed_at,
+        created_at: row.created_at,
+        updated_at: row.updated_at,
+      },
+      gym: {
+        id: gym.id,
+        slug: gym.slug,
+        name_ko: gym.name_ko,
+        name_en: gym.name_en,
+        brand_type: gym.brand_type,
+        is_active: gym.is_active,
+      },
+    };
+  });
+
+  return {
+    items,
+    total: count ?? items.length,
+    page: parsed.page,
+    pageSize: parsed.pageSize,
   };
 }

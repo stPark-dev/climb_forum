@@ -1,0 +1,204 @@
+/* admin shell — 단정한 운영 패널 톤.
+   공개 사이트(/gyms)와 동일한 다크 변수 재활용 + 인디고 액센트로 도메인 구분.
+   미라지의 className을 그대로 매칭하기 위해 글로벌 스코프 css.
+*/
+
+:root {
+  --admin-accent: #7c8cff;
+  --admin-accent-soft: rgba(124, 140, 255, 0.12);
+  --admin-accent-border: rgba(124, 140, 255, 0.4);
+  --admin-surface: #16161a;
+  --admin-surface-elevated: #1d1d22;
+  --admin-border: #2a2a30;
+  --admin-border-strong: #34343c;
+  --admin-text-muted: #8a8a93;
+}
+
+.admin-shell {
+  min-height: calc(100vh - 64px); /* SiteHeader 높이 고려 */
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+/* ───── 헤더 ───── */
+.admin-shell__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1.5rem;
+  background: var(--admin-surface);
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-shell__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.005em;
+}
+.admin-shell__brand::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--admin-accent);
+}
+.admin-shell__brand:hover {
+  color: var(--admin-accent);
+  text-decoration: none;
+}
+
+.admin-shell__user {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.8125rem;
+}
+
+.admin-shell__user-name {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* role 배지 — 색 + 라벨로 의미 전달 (색에만 의존 X) */
+.admin-shell__user-role {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 999px;
+  border: 1px solid var(--admin-border-strong);
+  background: var(--admin-surface-elevated);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.admin-shell__user-role[data-role="curator"] {
+  color: #5eead4;
+  border-color: rgba(94, 234, 212, 0.35);
+  background: rgba(94, 234, 212, 0.08);
+}
+.admin-shell__user-role[data-role="moderator"] {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.08);
+}
+.admin-shell__user-role[data-role="admin"] {
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.4);
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.admin-shell__signout {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--admin-border-strong);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 120ms ease, color 120ms ease;
+}
+.admin-shell__signout:hover {
+  border-color: var(--admin-accent);
+  color: var(--text-primary);
+}
+.admin-shell__signout:focus-visible {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 2px;
+}
+
+/* ───── body / sidebar / main ───── */
+.admin-shell__body {
+  display: grid;
+  grid-template-columns: 232px 1fr;
+  min-height: calc(100vh - 64px - 53px);
+}
+
+.admin-shell__sidebar {
+  background: var(--admin-surface);
+  border-right: 1px solid var(--admin-border);
+  padding: 1.25rem 0.875rem;
+}
+
+.admin-shell__main {
+  padding: 1.75rem 2rem 3rem;
+  min-width: 0; /* table overflow 대비 */
+}
+
+@media (max-width: 768px) {
+  .admin-shell__body {
+    grid-template-columns: 1fr;
+  }
+  .admin-shell__sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--admin-border);
+    padding: 0.75rem 1rem;
+  }
+  .admin-shell__main {
+    padding: 1.25rem 1rem 2rem;
+  }
+}
+
+/* ───── admin nav ───── */
+.admin-nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-nav__item {
+  margin: 0;
+}
+
+.admin-nav__link {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+.admin-nav__link:hover {
+  background: var(--admin-surface-elevated);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.admin-nav__link:focus-visible {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 1px;
+}
+.admin-nav__link[aria-current="page"] {
+  background: var(--admin-accent-soft);
+  color: var(--admin-accent);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .admin-nav__list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-shell__signout,
+  .admin-nav__link {
+    transition: none;
+  }
+}

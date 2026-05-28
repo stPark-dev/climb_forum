@@ -112,6 +112,54 @@ export function parseListGymsQuery(query: Record<string, string | string[] | und
 }
 
 // ============================================================
+// 4-2. admin 전용 목록 입력 — 비활성도 표시 + 키워드/상태 필터
+// ============================================================
+export const ADMIN_GYM_STATUSES = ["active", "inactive", "all"] as const;
+export type AdminGymStatus = (typeof ADMIN_GYM_STATUSES)[number];
+
+// q (검색어) 는 SQL ilike 패턴에 들어가므로 길이만 막고 별도 escape 는 PostgREST 위임
+export const listAdminGymsInputSchema = z.object({
+  q: z.string().min(1).max(100).optional(),
+  sido: sidoSchema.optional(),
+  facility: z.enum(FACILITY_TYPES).optional(),
+  status: z.enum(ADMIN_GYM_STATUSES).default("all"),
+  page: z.number().int().min(1).max(1000).default(1),
+  pageSize: z.number().int().min(1).max(100).default(20),
+});
+export type ListAdminGymsInput = z.infer<typeof listAdminGymsInputSchema>;
+
+export function parseListAdminGymsQuery(
+  query: Record<string, string | string[] | undefined>,
+): ListAdminGymsInput {
+  const pick = (key: string): string | undefined => {
+    const v = query[key];
+    if (Array.isArray(v)) return v[0];
+    return v;
+  };
+  const pageNum = Number.parseInt(pick("page") ?? "1", 10);
+  const pageSizeNum = Number.parseInt(pick("pageSize") ?? "20", 10);
+  const rawStatus = pick("status");
+  const status = (ADMIN_GYM_STATUSES as readonly string[]).includes(rawStatus ?? "")
+    ? (rawStatus as AdminGymStatus)
+    : "all";
+
+  // 사용자가 URL 에 음수·0·과대수를 박아도 admin 페이지를 5xx 로 띄우지 않도록
+  // schema 거부 전에 안전 기본값으로 강등. (Number.isFinite 만 봤더니 -1 도 통과해 zod throw 발생.)
+  const safePage = Number.isInteger(pageNum) && pageNum >= 1 && pageNum <= 1000 ? pageNum : 1;
+  const safePageSize =
+    Number.isInteger(pageSizeNum) && pageSizeNum >= 1 && pageSizeNum <= 100 ? pageSizeNum : 20;
+
+  return listAdminGymsInputSchema.parse({
+    q: pick("q") || undefined,
+    sido: pick("sido") || undefined,
+    facility: pick("facility") || undefined,
+    status,
+    page: safePage,
+    pageSize: safePageSize,
+  });
+}
+
+// ============================================================
 // 5. DB Row 타입 (Supabase 응답 모양과 1:1)
 // ============================================================
 export interface GymRow {

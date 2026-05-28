@@ -1,0 +1,359 @@
+/* admin 대시보드 + gyms 페이지 공통 / 페이지별 시각.
+   글로벌 클래스명(미라지 컨벤션)을 그대로 매칭.
+*/
+
+/* ───── 대시보드 ───── */
+.admin-dashboard__header {
+  margin-bottom: 1.5rem;
+}
+.admin-dashboard__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.admin-dashboard__subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.admin-dashboard__cards {
+  list-style: none;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.875rem;
+}
+
+.admin-card {
+  padding: 1rem 1.125rem;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  transition: border-color 120ms ease;
+}
+.admin-card:hover {
+  border-color: var(--admin-border-strong);
+}
+
+.admin-card__label {
+  margin: 0 0 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+}
+.admin-card__value {
+  margin: 0;
+  font-size: 1.625rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.admin-dashboard__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.admin-dashboard__link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--admin-accent);
+  background: var(--admin-accent-soft);
+  border: 1px solid var(--admin-accent-border);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background-color 120ms ease;
+}
+.admin-dashboard__link:hover {
+  background: rgba(124, 140, 255, 0.2);
+  text-decoration: none;
+}
+.admin-dashboard__link:focus-visible {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 2px;
+}
+
+/* ───── gyms 페이지 ───── */
+.admin-gyms__header {
+  margin-bottom: 1.25rem;
+}
+.admin-gyms__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.admin-gyms__subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ───── 필터 폼 ───── */
+.admin-gyms__filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) auto;
+  gap: 0.75rem;
+  align-items: end;
+  padding: 0.875rem 1rem;
+  margin-bottom: 1.25rem;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+}
+
+.admin-gyms__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+}
+.admin-gyms__field-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+}
+
+.admin-gyms__input,
+.admin-gyms__select {
+  padding: 0.5rem 0.625rem;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--admin-border-strong);
+  border-radius: 6px;
+  line-height: 1.4;
+  font-family: inherit;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.admin-gyms__input::placeholder {
+  color: var(--admin-text-muted);
+}
+.admin-gyms__input:hover,
+.admin-gyms__select:hover {
+  border-color: #44444c;
+}
+.admin-gyms__input:focus,
+.admin-gyms__select:focus {
+  outline: none;
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 2px var(--admin-accent-soft);
+}
+.admin-gyms__select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238a8a93' d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.625rem center;
+  padding-right: 1.75rem;
+}
+
+.admin-gyms__submit {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--bg-primary);
+  background: var(--admin-accent);
+  border: 1px solid var(--admin-accent);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 120ms ease, transform 80ms ease;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.admin-gyms__submit:hover {
+  background: #6b7bff;
+}
+.admin-gyms__submit:active {
+  transform: translateY(1px);
+}
+.admin-gyms__submit:focus-visible {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 2px;
+}
+
+/* ───── 테이블 ───── */
+.admin-gyms__table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.admin-gyms__table thead th {
+  text-align: left;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--admin-surface-elevated);
+  border-bottom: 1px solid var(--admin-border);
+}
+.admin-gyms__table tbody td {
+  padding: 0.6875rem 0.875rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--admin-border);
+  vertical-align: middle;
+}
+.admin-gyms__table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.admin-gyms__table tbody tr:hover td {
+  background: rgba(124, 140, 255, 0.04);
+}
+
+/* 비활성 행은 차분히 dim — 글자도 색이 빠지지만 상태 라벨은 별도 표기됨 */
+.admin-gyms__row[data-active="false"] td {
+  color: var(--admin-text-muted);
+}
+.admin-gyms__row[data-active="false"] .admin-gyms__branch-link {
+  color: var(--admin-text-muted);
+}
+
+.admin-gyms__branch-link {
+  color: var(--admin-accent);
+  font-weight: 500;
+  text-decoration: none;
+}
+.admin-gyms__branch-link:hover {
+  text-decoration: underline;
+}
+.admin-gyms__branch-link:focus-visible {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ───── 상태 배지 ───── */
+.admin-gyms__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 999px;
+  border: 1px solid var(--admin-border-strong);
+  background: var(--admin-surface-elevated);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.admin-gyms__status::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.admin-gyms__status[data-status="active"] {
+  color: #5eead4;
+  border-color: rgba(94, 234, 212, 0.35);
+  background: rgba(94, 234, 212, 0.08);
+}
+.admin-gyms__status[data-status="inactive"] {
+  color: var(--admin-text-muted);
+  border-color: var(--admin-border-strong);
+  background: var(--admin-surface-elevated);
+}
+
+/* ───── 빈 상태 ───── */
+.admin-gyms__empty {
+  padding: 2.5rem 1rem;
+  text-align: center;
+  background: var(--admin-surface);
+  border: 1px dashed var(--admin-border-strong);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+/* ───── 페이저 ───── */
+.admin-gyms__pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+.admin-gyms__pager-link,
+.admin-gyms__pager-disabled {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--admin-border-strong);
+  border-radius: 6px;
+  line-height: 1.4;
+}
+.admin-gyms__pager-link {
+  color: var(--text-primary);
+  background: var(--admin-surface);
+  text-decoration: none;
+  transition: border-color 120ms ease, color 120ms ease;
+}
+.admin-gyms__pager-link:hover {
+  border-color: var(--admin-accent);
+  color: var(--admin-accent);
+  text-decoration: none;
+}
+.admin-gyms__pager-link:focus-visible {
+  outline: 2px solid var(--admin-accent);
+  outline-offset: 2px;
+}
+.admin-gyms__pager-disabled {
+  color: var(--admin-text-muted);
+  opacity: 0.55;
+  background: var(--admin-surface);
+}
+.admin-gyms__pager-info {
+  font-variant-numeric: tabular-nums;
+  padding: 0 0.375rem;
+}
+
+/* ───── 좁은 화면 ───── */
+@media (max-width: 768px) {
+  .admin-gyms__filters {
+    grid-template-columns: 1fr 1fr;
+  }
+  .admin-gyms__submit {
+    grid-column: 1 / -1;
+  }
+  .admin-gyms__table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-card,
+  .admin-dashboard__link,
+  .admin-gyms__input,
+  .admin-gyms__select,
+  .admin-gyms__submit,
+  .admin-gyms__pager-link,
+  .admin-gyms__branch-link {
+    transition: none;
+  }
+  .admin-gyms__submit:active {
+    transform: none;
+  }
+}
