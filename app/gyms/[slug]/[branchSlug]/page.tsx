@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import NaverMap from "@/components/NaverMap";
+import { requireAuthenticated } from "@/lib/server/auth-guard";
 import { getBranchDetail } from "@/lib/server/gyms";
 import {
   DAY_TYPES,
@@ -29,6 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BranchDetailPage({ params }: PageProps) {
+  await requireAuthenticated(`/gyms/${params.slug}/${params.branchSlug}`);
   const data = await getBranchDetail(params.slug, params.branchSlug);
 
   if (!data) notFound();

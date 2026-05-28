@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { requireAuthenticated } from "@/lib/server/auth-guard";
 import { getGymWithBranches } from "@/lib/server/gyms";
 import { FACILITY_TYPE_LABEL } from "@/lib/types/gyms";
 import styles from "../gyms.module.css";
@@ -23,6 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function GymDetailPage({ params }: PageProps) {
+  await requireAuthenticated(`/gyms/${params.slug}`);
   const data = await getGymWithBranches(params.slug);
   if (!data) notFound();
 

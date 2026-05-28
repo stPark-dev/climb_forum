@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { requireAuthenticated } from "@/lib/server/auth-guard";
 import { listGyms } from "@/lib/server/gyms";
 import {
   FACILITY_TYPES,
@@ -22,6 +23,7 @@ interface PageProps {
 }
 
 export default async function GymsListPage({ searchParams }: PageProps) {
+  await requireAuthenticated("/gyms");
   const input = parseListGymsQuery(searchParams);
   const { items, total, page, pageSize } = await listGyms(input);
   const totalPages = Math.max(1, Math.ceil(total / pageSize));

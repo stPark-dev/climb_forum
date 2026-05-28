@@ -10,7 +10,7 @@ export default async function SiteHeader() {
       <nav className={styles.nav} aria-label="주요 메뉴">
         <Link href="/" className={styles.brand}>ClimbForum</Link>
         <ul className={styles.menu}>
-          <li><Link href="/gyms">클라이밍장</Link></li>
+          {user && <li><Link href="/gyms">클라이밍장</Link></li>}
           {/* 추후: <li><Link href="/community">커뮤니티</Link></li> */}
           {/* 추후: <li><Link href="/tips">꿀팁</Link></li> */}
         </ul>
