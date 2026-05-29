@@ -1,36 +1,82 @@
+/* SiteHeader — Creative Voltage 헤더
+   - 네이비 surface + bottom electric blue 가는 선
+   - 브랜드명은 Syne display, 메뉴는 Pretendard
+   - 회원가입 CTA = neon yellow (Yellow bg + Navy text) — bold creative
+   - className 변경 없음 (.header/.nav/.brand/.menu/.auth/.email/.signoutBtn/.loginLink/.signupLink)
+*/
+
 .header {
   position: sticky;
   top: 0;
-  z-index: 50;
-  background: #0a0a0c;
-  border-bottom: 1px solid var(--border, #27272a);
-  backdrop-filter: saturate(140%) blur(8px);
+  z-index: var(--z-nav, 100);
+  background: rgba(20, 20, 40, 0.92);
+  border-bottom: 1px solid var(--border, #34344a);
+  backdrop-filter: saturate(160%) blur(10px);
+  -webkit-backdrop-filter: saturate(160%) blur(10px);
+}
+/* 하단 electric blue accent line */
+.header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--cv-electric, #0066ff) 20%,
+    var(--cv-yellow, #d4ff00) 80%,
+    transparent 100%
+  );
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .nav {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1.5rem;
   display: flex;
   align-items: center;
   gap: 1.5rem;
 }
 
 .brand {
-  font-weight: 700;
-  font-size: 1.125rem;
+  font-family: var(--font-display, "Syne", system-ui, sans-serif);
+  font-weight: 800;
+  font-size: 1.25rem;
   color: var(--text-primary, #f5f5f7);
   text-decoration: none;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   min-height: 44px;
   display: inline-flex;
   align-items: center;
+  position: relative;
+  padding-right: 0.25rem;
 }
-
+/* 브랜드 점 — neon yellow */
+.brand::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 0.45rem;
+  border-radius: 50%;
+  background: var(--cv-yellow, #d4ff00);
+  box-shadow: 0 0 8px rgba(212, 255, 0, 0.45);
+  align-self: center;
+  margin-top: 0.5rem;
+}
 .brand:hover,
 .brand:focus-visible {
   text-decoration: none;
-  color: var(--accent-cyan, #18d7ff);
+  color: var(--cv-yellow, #d4ff00);
+}
+.brand:focus-visible {
+  outline: 2px solid var(--cv-electric, #0066ff);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 .menu {
@@ -48,22 +94,23 @@
   align-items: center;
   min-height: 44px;
   padding: 0 0.875rem;
-  border-radius: 8px;
+  border-radius: 6px;
   color: var(--text-primary, #f5f5f7);
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
   font-weight: 500;
-  transition: background-color 120ms ease, color 120ms ease;
+  letter-spacing: 0.005em;
+  transition: background-color 200ms ease, color 200ms ease;
 }
 
 .menu li a:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--cv-electric-soft, rgba(0, 102, 255, 0.12));
   text-decoration: none;
-  color: var(--accent-cyan, #18d7ff);
+  color: var(--cv-yellow, #d4ff00);
 }
 
 .menu li a:focus-visible {
-  outline: 2px solid var(--accent-cyan, #18d7ff);
+  outline: 2px solid var(--cv-electric, #0066ff);
   outline-offset: 2px;
   text-decoration: none;
 }
@@ -75,33 +122,38 @@
 }
 
 .email {
-  font-size: 0.85rem;
-  color: var(--text-secondary, #a1a1aa);
-  max-width: 180px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.8125rem;
+  color: var(--text-secondary, #a8a8c0);
+  max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  letter-spacing: 0.01em;
 }
 
 .signoutBtn {
-  min-height: 44px;
+  min-height: 40px;
   padding: 0 0.875rem;
-  background: var(--bg-elevated, #232326);
-  color: var(--text-primary, #f5f5f7);
-  border: 1px solid var(--border, #27272a);
-  border-radius: 8px;
-  font-size: 0.9rem;
+  background: transparent;
+  color: var(--text-secondary, #a8a8c0);
+  border: 1px solid var(--border, #34344a);
+  border-radius: 6px;
+  font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: border-color 120ms ease, background-color 120ms ease;
+  font-family: var(--font-body);
+  transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease;
 }
 
 .signoutBtn:hover {
-  border-color: var(--accent-cyan, #18d7ff);
+  border-color: var(--cv-electric, #0066ff);
+  color: var(--text-primary, #f5f5f7);
+  background: var(--cv-electric-soft, rgba(0, 102, 255, 0.12));
 }
 
 .signoutBtn:focus-visible {
-  outline: 2px solid var(--accent-cyan, #18d7ff);
+  outline: 2px solid var(--cv-electric, #0066ff);
   outline-offset: 2px;
 }
 
@@ -109,58 +161,72 @@
 .signupLink {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  padding: 0 0.875rem;
-  border-radius: 8px;
+  min-height: 40px;
+  padding: 0 1rem;
+  border-radius: 6px;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  transition: background-color 120ms ease, border-color 120ms ease;
+  letter-spacing: 0.005em;
+  transition: background-color 200ms ease, color 200ms ease, transform 120ms ease, box-shadow 200ms ease;
 }
 
 .loginLink {
   color: var(--text-primary, #f5f5f7);
-  border: 1px solid var(--border, #27272a);
+  border: 1px solid var(--border-strong, #4a4a66);
+  background: transparent;
 }
 
 .loginLink:hover {
-  border-color: var(--accent-cyan, #18d7ff);
+  border-color: var(--cv-electric, #0066ff);
+  background: var(--cv-electric-soft, rgba(0, 102, 255, 0.12));
+  color: var(--cv-yellow, #d4ff00);
   text-decoration: none;
 }
 
 .signupLink {
-  background: var(--accent-orange, #ff7a1a);
-  color: #0e0e10;
+  background: var(--cv-yellow, #d4ff00);
+  color: var(--cv-navy, #1a1a2e);
+  border: 1px solid var(--cv-yellow, #d4ff00);
+  font-weight: 700;
 }
 
 .signupLink:hover {
-  filter: brightness(1.05);
+  background: var(--cv-yellow-deep, #b8e000);
   text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(212, 255, 0, 0.32);
 }
+.signupLink:active { transform: translateY(0); }
 
 .loginLink:focus-visible,
 .signupLink:focus-visible {
-  outline: 2px solid var(--accent-cyan, #18d7ff);
+  outline: 2px solid var(--cv-electric, #0066ff);
   outline-offset: 2px;
 }
 
 @media (max-width: 640px) {
   .nav {
-    padding: 0.5rem 0.875rem;
+    padding: 0.625rem 1rem;
     gap: 0.75rem;
   }
   .brand {
-    font-size: 1rem;
+    font-size: 1.0625rem;
   }
   .menu li a {
     padding: 0 0.625rem;
-    font-size: 0.9rem;
+    font-size: 0.875rem;
   }
   .email {
     display: none;
   }
   .auth {
     gap: 0.5rem;
+  }
+  .loginLink,
+  .signupLink {
+    padding: 0 0.75rem;
+    font-size: 0.8125rem;
   }
 }
 
@@ -171,4 +237,5 @@
   .signupLink {
     transition: none;
   }
+  .signupLink:hover { transform: none; }
 }

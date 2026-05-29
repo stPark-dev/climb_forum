@@ -1,47 +1,91 @@
-/* 403 권한 없음 — 단정한 한 페이지 안내 */
+/* 403 권한 없음 — Creative Voltage
+   Split-panel 느낌의 좌측 yellow accent bar + 단정한 본문.
+   className 그대로 유지 (.forbidden, .forbidden__title, .forbidden__message, .forbidden__home).
+*/
 
 .forbidden {
-  max-width: 480px;
-  margin: 4rem auto;
-  padding: 2rem 1.5rem;
+  max-width: 520px;
+  margin: 5rem auto;
+  padding: 2.25rem 2rem;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   text-align: left;
   line-height: 1.6;
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-body);
+}
+.forbidden::before {
+  content: "403";
+  position: absolute;
+  top: -1.5rem;
+  right: -0.5rem;
+  font-family: var(--font-display, "Syne", sans-serif);
+  font-weight: 800;
+  font-size: 7rem;
+  color: var(--cv-yellow);
+  opacity: 0.08;
+  letter-spacing: -0.05em;
+  pointer-events: none;
+}
+.forbidden::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--cv-yellow);
 }
 
 .forbidden__title {
-  font-size: 1.375rem;
-  font-weight: 700;
-  margin: 0 0 0.75rem;
+  font-family: var(--font-display, "Syne", sans-serif);
+  font-size: 1.625rem;
+  font-weight: 800;
+  margin: 0 0 0.875rem;
   color: var(--text-primary);
-  letter-spacing: -0.005em;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
 }
 
 .forbidden__message {
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.5rem;
   color: var(--text-secondary);
   font-size: 0.9375rem;
+  max-width: 36rem;
 }
 
 .forbidden__home {
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 0.875rem;
+  padding: 0.625rem 1.125rem;
   font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--accent-cyan);
-  background: rgba(24, 215, 255, 0.08);
-  border: 1px solid rgba(24, 215, 255, 0.35);
-  border-radius: 6px;
+  font-weight: 700;
+  color: var(--cv-navy);
+  background: var(--cv-yellow);
+  border: 1px solid var(--cv-yellow);
+  border-radius: 4px;
   text-decoration: none;
+  transition: background-color 200ms ease, transform 120ms ease, box-shadow 200ms ease;
 }
 .forbidden__home:hover {
-  background: rgba(24, 215, 255, 0.15);
+  background: var(--cv-yellow-deep, #b8e000);
   text-decoration: none;
+  color: var(--cv-navy);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(212, 255, 0, 0.32);
 }
+.forbidden__home:active { transform: translateY(0); }
 .forbidden__home:focus-visible {
-  outline: 2px solid var(--accent-cyan);
+  outline: 2px solid var(--cv-electric);
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .forbidden__home,
+  .forbidden__home:hover {
+    transform: none;
+    transition: none;
+  }
 }

@@ -1,47 +1,315 @@
+/* ─────────────────────────────────────────────────────────────
+   Creative Voltage — 디자인 토큰 + 베이스 reset + 공용 유틸
+   - 한글 본문은 Pretendard (CDN, layout.tsx에서 <link>)
+   - 영문 display는 Syne, 영문 mono는 Space Mono (next/font, layout.tsx에서 주입)
+   - admin 영역은 자체 --admin-* 토큰을 쓰므로 본 토큰 변경에 영향 받지 않음
+   - className 변경 없음. 시각만 강화.
+   ───────────────────────────────────────────────────────────── */
+
 :root {
-  --bg-primary: #0e0e10;
-  --bg-secondary: #18181b;
-  --bg-elevated: #232326;
+  /* Creative Voltage palette */
+  --cv-electric: #0066ff;       /* primary action / accent */
+  --cv-electric-soft: rgba(0, 102, 255, 0.12);
+  --cv-electric-strong: #0052cc;
+  --cv-navy: #1a1a2e;           /* primary background */
+  --cv-navy-elevated: #232340;
+  --cv-navy-soft: #2a2a44;
+  --cv-yellow: #d4ff00;         /* neon accent / badge */
+  --cv-yellow-soft: rgba(212, 255, 0, 0.18);
+  --cv-yellow-deep: #b8e000;
+  --cv-light-blue: #3388ff;
+  --cv-white: #f5f5f7;          /* off-white — pure white 금지 */
+  --cv-dark-grey: #333344;
+
+  /* 의미 토큰 (기존 컨벤션 유지, 값만 갱신) */
+  --bg-primary: #1a1a2e;        /* Dark Navy 배경 */
+  --bg-secondary: #232340;      /* surface */
+  --bg-elevated: #2a2a44;       /* elevated surface */
   --text-primary: #f5f5f7;
-  --text-secondary: #a1a1aa;
-  --accent-orange: #ff7a1a;
-  --accent-cyan: #18d7ff;
-  --border: #27272a;
-  --danger: #ef4444;
+  --text-secondary: #a8a8c0;
+  --accent-orange: #d4ff00;     /* 호환을 위해 별칭 유지 — 시각은 neon yellow */
+  --accent-cyan: #0066ff;       /* 호환을 위해 별칭 유지 — 시각은 electric blue */
+  --border: #34344a;
+  --border-strong: #4a4a66;
+  --danger: #ff4d6d;
+
+  /* Typography stacks (next/font 가 --font-display/--font-mono 주입) */
+  --font-body: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+
+  /* Layout tokens */
+  --container-max: 1280px;
+  --spacing-unit: 0.5rem;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+
+  /* Halftone texture (radial dot pattern) */
+  --halftone-size: 8px;
+
+  /* z-index contract */
+  --z-base: 0;
+  --z-nav: 100;
+  --z-overlay: 200;
+  --z-modal: 300;
+  --z-toast: 500;
 }
+
 * { box-sizing: border-box; }
-html, body { padding: 0; margin: 0; background: var(--bg-primary); color: var(--text-primary); font-family: ui-sans-serif, system-ui, -apple-system, "Pretendard Variable", sans-serif; }
-a { color: var(--accent-cyan); text-decoration: none; }
-a:hover { text-decoration: underline; }
-.container { max-width: 480px; margin: 4rem auto; padding: 2rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; }
-.field { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
-.field label { font-size: 0.875rem; color: var(--text-secondary); }
-.field input { padding: 0.75rem; background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1rem; border: 0; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; }
-.btn-primary { background: var(--accent-orange); color: #0e0e10; }
-.btn-google { background: #ffffff; color: #1f1f1f; border: 1px solid #dadce0; }
-.btn-secondary { background: var(--bg-elevated); color: var(--text-primary); border: 1px solid var(--border); }
-.err { color: var(--danger); font-size: 0.875rem; margin-top: 0.5rem; }
-.muted { color: var(--text-secondary); font-size: 0.875rem; }
-.divider { display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0; color: var(--text-secondary); font-size: 0.875rem; }
-.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+html, body {
+  padding: 0;
+  margin: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  /* 은은한 halftone 텍스처. 전역 배경에 살짝 깔아 retro-modern 톤. */
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.04) 1px,
+    transparent 1px
+  );
+  background-size: var(--halftone-size) var(--halftone-size);
+  background-attachment: fixed;
+  min-height: 100dvh;
+}
+
+a {
+  color: var(--cv-electric);
+  text-decoration: none;
+  transition: color 200ms ease-out;
+}
+a:hover { color: var(--cv-light-blue); text-decoration: underline; }
+a:focus-visible {
+  outline: 2px solid var(--cv-electric);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* 영문 hero / display 클래스 — Syne. 한글이 섞이면 본문 폰트로 자연 fallback. */
+.display {
+  font-family: var(--font-display, var(--font-body));
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.mono {
+  font-family: var(--font-mono, ui-monospace, "SF Mono", monospace);
+  letter-spacing: 0;
+}
+
+/* ─────────────── 공용 form/container (auth용 컨벤션 유지) ─────────────── */
+.container {
+  max-width: 480px;
+  margin: 4rem auto;
+  padding: 2.25rem 2rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+/* 좌측 electric blue accent bar — split panels의 절제된 표현 */
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background: var(--cv-electric);
+}
+.container h1 {
+  font-family: var(--font-display, var(--font-body));
+  font-weight: 800;
+  font-size: 1.875rem;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.25rem;
+  line-height: 1.15;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+.field label {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.field input {
+  padding: 0.75rem 0.875rem;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-family: var(--font-body);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.field input:focus {
+  outline: none;
+  border-color: var(--cv-electric);
+  box-shadow: 0 0 0 2px var(--cv-electric-soft);
+}
+.field input:focus-visible {
+  outline: 2px solid var(--cv-electric);
+  outline-offset: 2px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 0;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  width: 100%;
+  letter-spacing: 0.005em;
+  transition: background-color 200ms ease, transform 120ms ease, box-shadow 200ms ease, filter 200ms ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--cv-electric);
+  color: var(--cv-white);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--cv-electric-strong);
+  box-shadow: 0 4px 14px rgba(0, 102, 255, 0.35);
+}
+.btn-primary:focus-visible {
+  outline: 2px solid var(--cv-yellow);
+  outline-offset: 2px;
+}
+
+.btn-google {
+  background: var(--cv-white);
+  color: #1f1f1f;
+  border: 1px solid #dadce0;
+}
+.btn-google:hover:not(:disabled) { filter: brightness(0.97); }
+.btn-google:focus-visible {
+  outline: 2px solid var(--cv-electric);
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--cv-electric);
+  background: var(--cv-electric-soft);
+}
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--cv-electric);
+  outline-offset: 2px;
+}
+
+.err {
+  color: var(--danger);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+.muted {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-family: var(--font-mono, var(--font-body));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* 카드 — 홈 hero-cta 등에서 사용. neon-yellow accent border-top */
 .card {
   display: block;
-  padding: 1.25rem;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 12px;
+  padding: 1.25rem 1.375rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   text-decoration: none;
   color: inherit;
-  transition: border-color 120ms ease, transform 120ms ease;
+  position: relative;
+  transition: border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
 }
-.card:hover, .card:focus-visible {
-  border-color: rgba(125, 249, 255, 0.4);
-  transform: translateY(-1px);
+.card:hover,
+.card:focus-visible {
+  border-color: var(--cv-electric);
+  transform: translateY(-2px);
   text-decoration: none;
+  box-shadow: 0 6px 24px rgba(0, 102, 255, 0.22);
 }
-.card h3 { margin: 0 0 0.5rem 0; font-size: 1.125rem; }
+.card:focus-visible {
+  outline: 2px solid var(--cv-yellow);
+  outline-offset: 2px;
+}
+.card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.005em;
+}
 .card p { margin: 0; }
+
+/* Neon badge 유틸 — 페이지·헤더·gyms 모두 재사용 */
+.neon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  background: var(--cv-yellow);
+  color: var(--cv-navy);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
   .card { transition: none; }
-  .card:hover, .card:focus-visible { transform: none; }
+  .card:hover,
+  .card:focus-visible { transform: none; }
 }
