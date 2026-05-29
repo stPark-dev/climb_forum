@@ -1,29 +1,40 @@
-/* admin shell — 단정한 운영 패널 톤.
-   공개 사이트(/gyms)와 동일한 다크 변수 재활용 + 인디고 액센트로 도메인 구분.
-   미라지의 className을 그대로 매칭하기 위해 글로벌 스코프 css.
+/* admin shell — Creative Voltage 운영 패널 톤.
+   공개 SiteHeader 와 동일 navy 계열을 layered 로 연결, accent 는 electric blue.
+   미라지의 className 컨벤션을 그대로 매칭하기 위해 글로벌 스코프 css.
+   ─ user(default)=회색, curator=electric-blue, moderator=yellow, admin=red
+   ─ 색 + 한글 라벨 동반 (색에만 의존 X)
 */
 
 :root {
-  --admin-accent: #7c8cff;
-  --admin-accent-soft: rgba(124, 140, 255, 0.12);
-  --admin-accent-border: rgba(124, 140, 255, 0.4);
-  --admin-surface: #16161a;
-  --admin-surface-elevated: #1d1d22;
-  --admin-border: #2a2a30;
-  --admin-border-strong: #34343c;
-  --admin-text-muted: #8a8a93;
+  /* admin 토큰 → Creative Voltage 재매핑.
+     기존 변수명은 admin 컴포넌트 호환을 위해 보존하되, 값은 cv-* 로 치환. */
+  --admin-accent: var(--cv-electric);
+  --admin-accent-soft: var(--cv-electric-soft);
+  --admin-accent-border: rgba(0, 102, 255, 0.4);
+  --admin-accent-strong: var(--cv-electric-strong);
+  --admin-surface: var(--cv-navy-elevated);        /* sidebar/header surface */
+  --admin-surface-elevated: var(--cv-navy-soft);   /* table head, badge bg */
+  --admin-border: var(--border);
+  --admin-border-strong: var(--border-strong);
+  --admin-text-muted: #7a7a92;
 }
 
 .admin-shell {
   min-height: calc(100vh - 64px); /* SiteHeader 높이 고려 */
   background: var(--bg-primary);
   color: var(--text-primary);
+  font-family: var(--font-body);
   font-size: 0.9375rem;
   line-height: 1.55;
 }
 
-/* ───── 헤더 ───── */
+/* ───── 헤더 ─────
+   SiteHeader 가 rgba(20,20,40,0.92) 반투명 navy + bottom gradient line.
+   admin header 는 그 바로 아래에 붙으므로 --cv-navy-elevated 로 한 단계 들어간 surface
+   + 가는 electric blue line 으로 layered 연결.
+*/
 .admin-shell__header {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -32,13 +43,31 @@
   background: var(--admin-surface);
   border-bottom: 1px solid var(--admin-border);
 }
+.admin-shell__header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--cv-electric) 35%,
+    var(--cv-electric) 65%,
+    transparent 100%
+  );
+  opacity: 0.4;
+  pointer-events: none;
+}
 
 .admin-shell__brand {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  font-family: var(--font-display, var(--font-body));
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
   text-decoration: none;
   letter-spacing: -0.005em;
@@ -49,10 +78,11 @@
   width: 8px;
   height: 8px;
   border-radius: 2px;
-  background: var(--admin-accent);
+  background: var(--cv-electric);
+  box-shadow: 0 0 6px rgba(0, 102, 255, 0.45);
 }
 .admin-shell__brand:hover {
-  color: var(--admin-accent);
+  color: var(--cv-yellow);
   text-decoration: none;
 }
 
@@ -68,13 +98,16 @@
   font-weight: 500;
 }
 
-/* role 배지 — 색 + 라벨로 의미 전달 (색에만 의존 X) */
+/* role 배지 — 색 + 한글 라벨로 의미 전달 (색에만 의존 X) */
 .admin-shell__user-role {
   display: inline-flex;
   align-items: center;
   padding: 0.125rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-family: var(--font-mono, var(--font-body));
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   border-radius: 999px;
   border: 1px solid var(--admin-border-strong);
   background: var(--admin-surface-elevated);
@@ -83,38 +116,40 @@
   white-space: nowrap;
 }
 .admin-shell__user-role[data-role="curator"] {
-  color: #5eead4;
-  border-color: rgba(94, 234, 212, 0.35);
-  background: rgba(94, 234, 212, 0.08);
+  color: var(--cv-light-blue);
+  border-color: rgba(51, 136, 255, 0.4);
+  background: rgba(51, 136, 255, 0.1);
 }
 .admin-shell__user-role[data-role="moderator"] {
-  color: #fbbf24;
-  border-color: rgba(251, 191, 36, 0.35);
-  background: rgba(251, 191, 36, 0.08);
+  color: var(--cv-yellow);
+  border-color: rgba(212, 255, 0, 0.4);
+  background: rgba(212, 255, 0, 0.08);
 }
 .admin-shell__user-role[data-role="admin"] {
-  color: #f87171;
-  border-color: rgba(248, 113, 113, 0.4);
-  background: rgba(248, 113, 113, 0.08);
+  color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.4);
+  background: rgba(255, 107, 107, 0.08);
 }
 
 .admin-shell__signout {
   padding: 0.375rem 0.75rem;
   font-size: 0.8125rem;
   font-weight: 500;
+  font-family: var(--font-body);
   color: var(--text-secondary);
   background: transparent;
   border: 1px solid var(--admin-border-strong);
   border-radius: 6px;
   cursor: pointer;
-  transition: border-color 120ms ease, color 120ms ease;
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
 }
 .admin-shell__signout:hover {
-  border-color: var(--admin-accent);
+  border-color: var(--cv-electric);
   color: var(--text-primary);
+  background: var(--cv-electric-soft);
 }
 .admin-shell__signout:focus-visible {
-  outline: 2px solid var(--admin-accent);
+  outline: 2px solid var(--cv-electric);
   outline-offset: 2px;
 }
 
@@ -134,6 +169,7 @@
 .admin-shell__main {
   padding: 1.75rem 2rem 3rem;
   min-width: 0; /* table overflow 대비 */
+  background: var(--bg-primary);
 }
 
 @media (max-width: 768px) {
@@ -171,7 +207,7 @@
   color: var(--text-secondary);
   border-radius: 6px;
   text-decoration: none;
-  transition: background-color 120ms ease, color 120ms ease;
+  transition: background-color 160ms ease, color 160ms ease;
 }
 .admin-nav__link:hover {
   background: var(--admin-surface-elevated);
@@ -179,13 +215,14 @@
   text-decoration: none;
 }
 .admin-nav__link:focus-visible {
-  outline: 2px solid var(--admin-accent);
+  outline: 2px solid var(--cv-electric);
   outline-offset: 1px;
 }
 .admin-nav__link[aria-current="page"] {
-  background: var(--admin-accent-soft);
-  color: var(--admin-accent);
-  font-weight: 500;
+  background: var(--cv-electric-soft);
+  color: var(--cv-electric);
+  font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--cv-electric);
 }
 
 @media (max-width: 768px) {
@@ -193,6 +230,9 @@
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.375rem;
+  }
+  .admin-nav__link[aria-current="page"] {
+    box-shadow: inset 0 -2px 0 var(--cv-electric);
   }
 }
 
